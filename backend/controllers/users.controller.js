@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const login = async (req, res) => {
     try {
-        const row = await _login(req.body.email.toLowerCase());
+        const row = await _login(req.body.user_email.toLowerCase());
         // email
         if (row.length === 0)
             return res.status(404).json({ msg: "email not found" });
@@ -13,12 +13,12 @@ const login = async (req, res) => {
         const match = await bcrypt.compare(req.body.password + "", row[0].password);
         if (!match) return res.status(404).json({ msg: "wrong password" });
         // succesful login
-        const userid = row[0].id;
-        const email = row[0].email;
+        const id = row[0].id;
+        const user_email = row[0].user_email;
         // my secret
         const secret = process.env.ACCESS_TOKEN_SECRET;
         // token
-        const accessToken = jwt.sign({ userid, email }, secret, {
+        const accessToken = jwt.sign({ id, user_email }, secret, {
             expiresIn: "60s",
         });
         // server cookies
@@ -30,14 +30,16 @@ const login = async (req, res) => {
         res.json({ token: accessToken });
     } catch (err) {
         console.log(err);
-        res.status(404).json({ msg: "somthing went wrong" });
+        res.status(404).json({ msg: "something went wrong" });
     }
 };
 
 const register = async (req, res) => {
-    const { email, password } = req.body;
-
-    const lower_email = email.toLowerCase();
+    const { user_email, password } = req.body;
+    if (!user_email) {
+        return res.status(400).json({ msg: 'user_email is required' });
+    }
+    const lower_email = user_email.toLowerCase();
 
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password + "", salt);
@@ -47,7 +49,7 @@ const register = async (req, res) => {
         res.json(row);
     } catch (err) {
         console.log(err);
-        res.status(404).json({ msg: 'email already exist' });
+        res.status(404).json({ msg: 'email already exists' });
     }
 };
 

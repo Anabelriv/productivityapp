@@ -1,32 +1,26 @@
 const { db } = require("../config/db.js");
 
 const _getAllGoals = () => {
-    return db("goals").select("id", "name", "description", "Importance", "Time").orderBy("name");
+    return db("goals").select("goal_id", "user_email", "title", "description", "date", "id_importance", "difficulty").where({ user_email }).orderBy("id_importance");
 };
 
-const _getGoalById = (id) => {
-    return db("goals").select("id", "name", "description", "importance", "time").where({ id });
+const _getGoalById = (goal_id) => {
+    return db("goals").select("goal_id", "user_email", "title", "description", "date", "id_importance", "difficulty").where({ goal_id });
 };
 
-// const _searchProduct = (name) => {
-//     return db.select("id", "name", "price").from('products')
-//         .where({ name });
-//     // return db.raw("select id, name,price from products where name like ?", [`${p}%`])
-//     //   .rows;
-// };
-const _insertGoal = ({ name, description, importance, time }) => {
-    return db("goals").insert({ name, description, importance, time }, ["id", "name", "description", "importance", "time"]);
+const _insertGoal = ({ user_email, title, description, date, id_importance, difficulty }) => {
+    return db("goals").insert({ user_email, title, description, date, id_importance, difficulty }, ["user_email", "title", "description", "date", "id_importance", "difficulty"]);
 };
 
-const _editGoal = ({ name, description, importance, time }, id) => {
+const _editGoal = ({ title, description, date, id_importance }, goal_id) => {
     return db("goals")
-        .update({ name, description, importance, time })
-        .where({ id })
-        .returning(["id", "name", "description", "importance", "time"]);
+        .update({ title, description, date, id_importance, difficulty })
+        .where({ goal_id })
+        .returning(["goal_id", "title", "description", "date", "importance", "difficulty"]);
 };
 
-const _deleteGoal = (id) => {
-    return db("goals").where({ id }).del().returning(["id", "name", "description"]);
+const _deleteGoal = (goal_id) => {
+    return db("goals").where({ goal_id }).del().returning(["goal_id", "title", "description"]);
 };
 
 module.exports = {

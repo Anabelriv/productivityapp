@@ -1,4 +1,4 @@
-const { goals } = require("../config/db.js");
+const { db } = require("../config/db.js");
 const {
     _getAllGoals,
     _getGoalById,
@@ -18,20 +18,10 @@ const getAllGoals = (req, res) => {
         });
 };
 
-// const searchProduct = async (req, res) => {
-//   try {
-//     const data = await _searchProduct(req.query.name);
-//     res.json(data);
-//   } catch (error) {
-//     console.log(error);
-//     res.status(404).json({ msg: error.message });
-//   }
-// };
 
 const getGoal = async (req, res) => {
     try {
-        const id = req.params.id;
-        const data = await _getGoalById(id);
+        const data = await _getGoalById(goal_id);
         res.json(data);
     } catch (error) {
         console.log(error);
@@ -52,11 +42,11 @@ const createGoal = async (req, res) => {
 };
 
 const editGoal = async (req, res) => {
-    const { id } = req.params;
-    const { name, description } = req.body;
+    const { goal_id } = req.params;
+    const { title, description } = req.body;
 
     try {
-        const data = await _editGoal(req.body, id);
+        const data = await _editGoal(req.body, goal_id);
         res.json(data);
     } catch (error) {
         console.log(error);
@@ -65,9 +55,9 @@ const editGoal = async (req, res) => {
 };
 
 const deleteGoal = async (req, res) => {
-    const { id } = req.params;
+    const { goal_id } = req.params;
     try {
-        const data = await _deleteGoal(id);
+        const data = await _deleteGoal(goal_id);
         res.json(data);
     } catch (error) {
         console.log(error);
