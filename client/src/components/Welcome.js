@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Home() {
+function Welcome() {
     const [step, setStep] = useState(1);
     const [birthdate, setBirthdate] = useState('');
 
@@ -118,4 +118,4 @@ function Home() {
 
 }
 
-export default Home;
+export default Welcome;

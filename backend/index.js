@@ -22,15 +22,12 @@ app.get('/todos/:userEmail', async (req, res) => {
 })
 
 // create a new goal
-
 app.post('/todos', async (req, res) => {
     const { user_email, title, description, date, id_importance, difficulty } = req.body
-    console.log(user_email, title, description, date, id_importance, difficulty)
     // Validate request body
     if (!user_email || !title || !description || !date || !id_importance || !difficulty) {
         return res.status(400).json({ error: 'Incomplete data in the request body' });
     }
-
     try {
         const [newGoal] = await db("goals").insert(
             { user_email, title, description, date, id_importance, difficulty },
@@ -42,6 +39,7 @@ app.post('/todos', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 })
+
 // update goal
 app.put('/todos/:goal_id', async (req, res) => {
     const { goal_id } = req.params;
@@ -121,12 +119,14 @@ app.post('/login', async (req, res) => {
     const { email, password } = req.body
     try {
         const users = await db.select('*').from('users').where('user_email', '=', email);
-        if (!users.rows.length)
+        console.log(users)
+        if (!users.length)
             return res.status(401).json({ detail: "User does not exist!" });
-        const success = await bcrypt.compare(password, users.rows[0].password)
+        const success = await bcrypt.compare(password, users[0].password)
         const token = jwt.sign({ email }, 'secret', { expiresIn: '1hr' })
         if (success) {
-            res.json({ token, email: users.rows[0].email });
+            res.json({ token, email: users[0].email });
+            console.log('success')
         } else {
             res.json({ detail: "login failed" })
         }

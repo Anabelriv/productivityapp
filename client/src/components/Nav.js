@@ -6,7 +6,7 @@ const Nav = () => {
                 <Link className="nav-link" to="/">
                     Welcome
                 </Link>
-                <Link className="nav-link" to="/goals">
+                <Link className="nav-link" to="/goals/:userEmail">
                     My Goals
                 </Link>
                 <Link className="nav-link" to="/freetime">

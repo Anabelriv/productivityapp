@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import TickIcon from "./TickIcon";
-import Goal from "./Goal"
+import GoalActions from "./Goal"
 import Auth from "./LoginRegister";
 import { useCookies } from "react-cookie";
 
@@ -28,7 +28,7 @@ const Goals = (props) => {
                         Logout
                     </button>
                 </div>
-                {showModal && <Goal mode={'create'} setShowModal={setShowModal} getData={getData} />}
+                {showModal && <GoalActions mode={'create'} setShowModal={setShowModal} getData={getData} />}
             </div>
         )
     }
@@ -57,7 +57,7 @@ const Goals = (props) => {
                 </div>
                 <div className="button-container">
                     <button onClick={() => setShowModal(true)} className="edit">Edit</button>
-                    {showModal && <Goal mode={'edit'} setShowModal={setShowModal} getData={getData} goal={goal} />}
+                    {showModal && <GoalActions mode={'edit'} setShowModal={setShowModal} getData={getData} goal={goal} />}
                     <button className="delete" onClick={del}>Delete</button>
                 </div>
             </li>)

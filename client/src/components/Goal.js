@@ -3,11 +3,12 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 //
-const Goal = ({ mode, setShowModal, getData, goal }) => {
+const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     const [cookies, setCookie, removeCookie] = useCookies(null)
     const editMode = mode === 'edit';
+
     const [data, setData] = useState({
-        user_email: editMode ? goal.user_email : cookies.user_email,
+        user_email: editMode ? goal.user_email : cookies.Email,
         title: editMode ? goal.title : '',
         description: editMode ? goal.description : '',
         date: editMode ? goal.date : '',
@@ -15,10 +16,9 @@ const Goal = ({ mode, setShowModal, getData, goal }) => {
         difficulty: editMode ? goal.difficulty : ''
     });
     const param = useParams();
-    const navigate = useNavigate()
+    console.log("param=>", param);
 
     //post data
-
     const postData = async (e) => {
         e.preventDefault();
         try {
@@ -51,16 +51,15 @@ const Goal = ({ mode, setShowModal, getData, goal }) => {
 
     //
     const handleChange = (e) => {
-        console.log('Handlechange', e)
         const { name, value } = e.target
         setData(data => ({
             ...data,
             [name]: value
         }))
+        console.log(data)
     }
-    console.log("param=>", param);
 
-
+    //get goal details
     const getGoalInfo = async () => {
         try {
             const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${param.id}`);
@@ -102,14 +101,12 @@ const Goal = ({ mode, setShowModal, getData, goal }) => {
     };
     //
 
-
-
     useEffect(() => {
         getGoalInfo();
         // eslint-disable-next-line 
     }, []);
 
-    //
+    //delete a goal
 
     const del = async () => {
         try {
@@ -136,9 +133,7 @@ const Goal = ({ mode, setShowModal, getData, goal }) => {
                         <h2>Let's {mode} your goal</h2>
                         <button className="cancel" onClick={() => setShowModal(false)}>Cancel</button>
                     </div>
-                    {/* <form className="update" onSubmit={postData}> */}
                     <form className="update">
-
                         <div className="goal-box">
                             <label style={{ 'position': 'relative' }}>Title</label>
                             <span></span>
@@ -183,4 +178,4 @@ const Goal = ({ mode, setShowModal, getData, goal }) => {
         </div>
     );
 };
-export default Goal;
+export default GoalActions;

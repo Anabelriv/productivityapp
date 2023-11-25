@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { TextField } from "@mui/material";
-import { useCookies } from 'react-cookie'
-
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom'
 
 const Auth = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies(null)
@@ -17,6 +17,7 @@ const Auth = (props) => {
         setIsLogIn(status)
     }
 
+    const navigate = useNavigate();
     const handleAction = async (e, endpoint) => {
         e.preventDefault()
         try {
@@ -37,7 +38,10 @@ const Auth = (props) => {
                 setCookie('Email', data.email)
                 setCookie('AuthToken', data.token)
 
-                window.location.reload()
+                // Redirect to /goals/:user_id
+                // const userId = data.user_id;
+                navigate(`/`);
+
             }
 
         } catch (err) {
@@ -47,11 +51,21 @@ const Auth = (props) => {
     };
     return (
         <div className="create-goal">
-            <h2 className="create-title">{isLogIn ? (props.title) : (props.title)}</h2>
+            <button type="submit" variant="contained"
+                onClick={() => viewLogin(false)}
+                style={{ backgroundColor: !isLogIn ? '#0367a6' : 'rgb(188,188,188)' }}>
+                Sign Up
+            </button>
+            <button type="submit" variant="contained"
+                onClick={() => viewLogin(true)}
+                style={{ backgroundColor: isLogIn ? '#0367a6' : 'rgb(188,188,188)' }}>
+                Login
+            </button>
             <form >
+                <h2 className="create-title">{isLogIn ? (props.title) : (props.title)}</h2>
                 <TextField
                     sx={{ m: 1 }}
-                    id="email"
+                    id="user_email"
                     type="email"
                     label="Enter Email"
                     variant="outlined"
@@ -79,16 +93,7 @@ const Auth = (props) => {
                     {message && <p>{message}</p>}
                 </div>
             </form>
-            <button type="submit" variant="contained"
-                onClick={() => viewLogin(false)}
-                style={{ backgroundColor: !isLogIn ? 'rgb(255,255,255)' : 'rgb(188,188,188)' }}>
-                Sign Up
-            </button>
-            <button type="submit" variant="contained"
-                onClick={() => viewLogin(true)}
-                style={{ backgroundColor: isLogIn ? 'rgb(255,255,255)' : 'rgb(188,188,188)' }}>
-                Login
-            </button>
+
         </div>
 
     );
