@@ -1,39 +1,32 @@
-const { db } = require("../config/db.js");
 const {
-    _getAllGoals,
-    _getGoalById,
-    _insertGoal,
-    _editGoal,
+    _getAllGoalsDB,
+    _insertGoalDB,
+    _editGoalDB,
     _deleteGoal,
 } = require("../models/goals.model.js");
 
-const getAllGoals = (req, res) => {
-    _getAllGoals()
-        .then((data) => {
-            res.json(data);
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(404).json({ msg: "not found" });
-        });
-};
-
-
-const getGoal = async (req, res) => {
+//get all goals
+const getAllGoals = async (req, res) => {
+    const { userEmail } = req.params
     try {
-        const data = await _getGoalById(goal_id);
-        res.json(data);
-    } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: "no goal match this id" });
+        const goals = await (_getAllGoalsDB(), userEmail);
+        res.json(goals)
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
     }
 };
 
+//create goal
 const createGoal = async (req, res) => {
-    // const { name, price } = req.body;
+    const { user_email, title, description, date, id_importance, difficulty } = req.body
+    // Validate request body
+    if (!user_email || !title || !description || !date || !id_importance || !difficulty) {
+        return res.status(400).json({ error: 'Incomplete data in the request body' });
+    }
     try {
-        const data = await _insertGoal(req.body);
-        // res.json(data);
+        const [newGoal] = await _insertGoalDB(req.body);
+        res.status(201).json(newGoal);
         getAllGoals(req, res);
     } catch (error) {
         console.log(error);
@@ -41,19 +34,33 @@ const createGoal = async (req, res) => {
     }
 };
 
-const editGoal = async (req, res) => {
+
+// update goal
+const updateGoal = async (req, res) => {
     const { goal_id } = req.params;
-    const { title, description } = req.body;
+    const { user_email, title, description, date, id_importance, difficulty } = req.body;
 
     try {
-        const data = await _editGoal(req.body, goal_id);
-        res.json(data);
-    } catch (error) {
-        console.log(error);
-        res.status(404).json({ msg: error.message });
+        const updatedGoal = await _editGoalDB(
+            {
+                user_email,
+                title,
+                description,
+                date,
+                id_importance,
+                difficulty,
+            },
+            goal_id
+        );
+
+        res.status(200).json(updatedGoal);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
+// delete goal
 const deleteGoal = async (req, res) => {
     const { goal_id } = req.params;
     try {
@@ -67,8 +74,7 @@ const deleteGoal = async (req, res) => {
 
 module.exports = {
     getAllGoals,
-    getGoal,
     createGoal,
-    editGoal,
+    updateGoal,
     deleteGoal,
 };

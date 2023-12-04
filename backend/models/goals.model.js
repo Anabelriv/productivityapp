@@ -1,32 +1,58 @@
-const { db } = require("../config/db.js");
+const { db } = require("../config/db");
 
-const _getAllGoals = () => {
-    return db("goals").select("goal_id", "user_email", "title", "description", "date", "id_importance", "difficulty").where({ user_email }).orderBy("id_importance");
+const _getAllGoalsDB = async (userEmail) => {
+    try {
+        const todos = await db.select('*').from('goals').where('user_email', '=', userEmail);
+        return todos;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
 };
 
-const _getGoalById = (goal_id) => {
-    return db("goals").select("goal_id", "user_email", "title", "description", "date", "id_importance", "difficulty").where({ goal_id });
+const _insertGoalDB = async ({ user_email, title, description, date, id_importance, difficulty }) => {
+    if (!user_email || !title || !description || !date || !id_importance || !difficulty) {
+        throw new Error('Incomplete data in the request body');
+    }
+    try {
+        const [newGoal] = await db("goals").insert(
+            { user_email, title, description, date, id_importance, difficulty },
+            ["user_email", "title", "description", "date", "id_importance", "difficulty"]
+        );
+        return newGoal;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
 };
 
-const _insertGoal = ({ user_email, title, description, date, id_importance, difficulty }) => {
-    return db("goals").insert({ user_email, title, description, date, id_importance, difficulty }, ["user_email", "title", "description", "date", "id_importance", "difficulty"]);
+const _editGoalDB = async ({ user_email, title, description, date, id_importance, difficulty }, goal_id) => {
+    try {
+        const updatedGoal = await db('goals')
+            .update({ user_email, title, description, date, id_importance, difficulty })
+            .where({ goal_id })
+            .returning(['goal_id', 'user_email', 'title', 'description', 'date', 'id_importance', 'difficulty']);
+
+        return updatedGoal;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
 
-const _editGoal = ({ title, description, date, id_importance }, goal_id) => {
-    return db("goals")
-        .update({ title, description, date, id_importance, difficulty })
-        .where({ goal_id })
-        .returning(["goal_id", "title", "description", "date", "importance", "difficulty"]);
-};
-
-const _deleteGoal = (goal_id) => {
-    return db("goals").where({ goal_id }).del().returning(["goal_id", "title", "description"]);
+const _deleteGoalDB = async (goal_id) => {
+    try {
+        const deletedGoal = await db("goals").where({ goal_id }).del().returning(["goal_id", "title", "description"]);
+        return deletedGoal;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
 };
 
 module.exports = {
-    _getAllGoals,
-    _getGoalById,
-    _insertGoal,
-    _editGoal,
-    _deleteGoal,
+    _getAllGoalsDB,
+    _insertGoalDB,
+    _editGoalDB,
+    _deleteGoalDB,
 };

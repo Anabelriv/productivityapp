@@ -18,9 +18,9 @@ const Nav = () => {
                 <Link className="nav-link" to="/login">
                     Login
                 </Link>
-                <Link className="nav-link" to="/signout">
+                {/* <Link className="nav-link" to="/signout">
                     Logout
-                </Link>
+                </Link> */}
             </div>
         </div>
     );

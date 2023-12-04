@@ -7,8 +7,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 // 
 const { auth } = require("./middlewares/utils.js");
-const { p_router } = require("./routes/goals.router.js");
-const { u_router } = require("./routes/users.router.js");
+const { goal_router } = require("./routes/goals.router.js");
+const { user_router } = require("./routes/users.router.js");
 const { error } = require("console");
 
 dotenv.config();
@@ -27,8 +27,8 @@ app.listen(process.env.PORT || 8000, () => {
 });
 
 
-app.use("/api/goals", p_router);
-app.use("/api/users", u_router);
+app.use("/api/goals", goal_router);
+app.use("/api/users", user_router);
 
 
 // // Have Node serve the files for our built React app

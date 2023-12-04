@@ -1,14 +1,15 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
 //
 const GoalActions = ({ mode, setShowModal, getData, goal }) => {
-    const [cookies, setCookie, removeCookie] = useCookies(null)
-    const editMode = mode === 'edit';
+    const [cookies] = useCookies(null)
+    console.log("getmecookies", cookies)
+    const editMode = mode === 'edit' ? true : false;
 
     const [data, setData] = useState({
-        user_email: editMode ? goal.user_email : cookies.Email,
+        user_email: editMode ? goal.user_email : 'blue@test.com',
         title: editMode ? goal.title : '',
         description: editMode ? goal.description : '',
         date: editMode ? goal.date : '',
@@ -25,7 +26,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
             const formattedDate = new Date(data.date).toISOString().split('T')[0];
 
             const postData = {
-                user_email: data.user_email,
+                user_email: "blue@test.com",
                 title: data.title,
                 description: data.description,
                 date: formattedDate,
@@ -42,6 +43,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
                 console.log('worked')
                 setShowModal(false)
                 getData()
+                console.log(data)
             }
         } catch (err) {
             console.error(err)
@@ -63,10 +65,12 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     const getGoalInfo = async () => {
         try {
             const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${param.id}`);
+            console.log("Response:", res);
             if (res.ok) {
                 const fetchedData = await res.json();
                 if (Array.isArray(fetchedData) && fetchedData.length > 0) {
                     setData(fetchedData[0]);
+                    console.log(setData);
                 } else {
                     console.log("fetched data is not as expected:", fetchedData);
                 }
@@ -104,7 +108,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     useEffect(() => {
         getGoalInfo();
         // eslint-disable-next-line 
-    }, []);
+    }, [param.id]);
 
     //delete a goal
 

@@ -1,5 +1,0 @@
-,goal_id,user_email,title,description,date,id_importance,difficulty,free_time,days_remaining,decision
-0,1,blue@test.com,one,test,2023-12-09,1,1,1,15,1.0
-1,2,blue@test.com,two,test,2023-12-23,2,2,2,29,1.0
-2,3,blue@test.com,three,test,2023-12-30,3,3,3,36,1.0
-3,4,blue@test.com,four,test,2024-01-06,1,4,1,43,1.0

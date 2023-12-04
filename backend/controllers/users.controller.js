@@ -4,52 +4,38 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const login = async (req, res) => {
+    const { user_email, password } = req.body;
     try {
-        const row = await _login(req.body.user_email.toLowerCase());
-        // email
-        if (row.length === 0)
-            return res.status(404).json({ msg: "email not found" });
-        // password
-        const match = await bcrypt.compare(req.body.password + "", row[0].password);
-        if (!match) return res.status(404).json({ msg: "wrong password" });
-        // succesful login
-        const id = row[0].id;
-        const user_email = row[0].user_email;
-        // my secret
-        const secret = process.env.ACCESS_TOKEN_SECRET;
-        // token
-        const accessToken = jwt.sign({ id, user_email }, secret, {
-            expiresIn: "60s",
-        });
-        // server cookies
-        res.cookie("token", accessToken, {
-            httpOnly: true,
-            maxAge: 60 * 1000,
-        });
-        // response with token
-        res.json({ token: accessToken });
+        const user = await _login(user_email.toLowerCase(), password);
+
+        if (!user) {
+            return res.status(401).json({ msg: "Email or password is incorrect" });
+        }
+
+        const token = jwt.sign({ user_email }, process.env.JWT_SECRET, { expiresIn: '1hr' });
+        res.json({ token, user_email: user.user_email });
     } catch (err) {
         console.log(err);
-        res.status(404).json({ msg: "something went wrong" });
+        res.status(404).json({ msg: "Something went wrong" });
     }
 };
 
 const register = async (req, res) => {
     const { user_email, password } = req.body;
-    if (!user_email) {
-        return res.status(400).json({ msg: 'user_email is required' });
-    }
-    const lower_email = user_email.toLowerCase();
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password + "", salt);
+    if (!user_email) {
+        return res.status(400).json({ msg: 'User email is required' });
+    }
 
     try {
-        const row = await _register(lower_email, hash);
-        res.json(row);
+        const newUser = await _register(user_email.toLowerCase(), hashedPassword);
+        const token = jwt.sign({ user_email }, process.env.JWT_SECRET, { expiresIn: '1hr' });
+        res.json({ user_email: newUser.user_email, token });
     } catch (err) {
         console.log(err);
-        res.status(404).json({ msg: 'email already exists' });
+        res.status(500).json({ detail: err.detail });
     }
 };
 

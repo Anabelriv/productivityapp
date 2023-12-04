@@ -1,9 +1,9 @@
-function Result() {
+function Result({ selectedGoal }) {
     return (
         <div className="result">
             <div className="result-inner">
                 <h1>The goal you should work on right now is:</h1>
-                <p>Goal Name</p>
+                <p>{selectedGoal.title}</p>
                 <svg className="resultname" width="70%" height="150" aria-hidden="true">
                     <path
                         style={{ transform: 'translateY(1em) scale(2)' }}
@@ -18,8 +18,7 @@ function Result() {
                 </svg>
             </div>
         </div>
-
-    )
+    );
 }
 
 export default Result;

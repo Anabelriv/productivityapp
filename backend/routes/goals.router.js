@@ -1,34 +1,28 @@
 const express = require("express");
-const { logger } = require("../middlewares/utils.js");
+//const { logger } = require("../middlewares/utils.js");
 
 const {
     getAllGoals,
-    getGoal,
     createGoal,
-    editGoal,
-    deleteGoal,
+    updateGoal,
+    deleteGoal
 } = require("../controllers/goals.controller.js");
 
-const { verifyToken } = require("../middlewares/verify.token.js");
+//const { verifyToken } = require("../middlewares/verify.token.js");
 
-const p_router = express.Router();
+const goal_router = express.Router();
 
 // CRUD - Read - get all goals
-p_router.get("/goals/:user_email", getAllGoals);
+goal_router.get("/:userEmail", getAllGoals);
 
-// // CRUD - Read - get all products
-// p_router.get("/search", searchProduct);
-
-// CRUD - Read - get one goal
-p_router.get("/:goalid", getGoal);
 
 // body - POST/PUT
-p_router.post("/newgoal", createGoal);
+goal_router.post("/", createGoal);
 
 // CRUD - Edit a goal - PUT
-p_router.put("/:goalid", editGoal);
+goal_router.put("/:goal_id", updateGoal);
 
 // CRUD - Delete a product - DELETE
-p_router.delete("/:goalid", deleteGoal);
+goal_router.delete("/:goal_id", deleteGoal);
 
-module.exports = { p_router };
+module.exports = { goal_router };

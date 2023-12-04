@@ -1,51 +1,47 @@
 import { useState } from "react";
-import { TextField } from "@mui/material";
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom'
+import { TextField } from "@mui/material";
 
 const Auth = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies(null)
-    const [isLogIn, setIsLogIn] = useState("")
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [cookies, setCookie] = useCookies(['Email']);
+    console.log('Email from cookies:', cookies.Email);
+    const [isLogIn, setIsLogIn] = useState(true)
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [confirmPassword, setConfirmPassword] = useState(null);
 
-    const [message, setMessage] = useState("");
-
+    const [error, setError] = useState(null);
     const viewLogin = (status) => {
-        setMessage(null)
+        setError(null)
         setIsLogIn(status)
     }
 
-    const navigate = useNavigate();
-    const handleAction = async (e, endpoint) => {
+    const handleSubmit = async (e, endpoint) => {
         e.preventDefault()
         try {
             if (!isLogIn && password !== confirmPassword) {
-                setMessage("Passwords do not match.");
+                setError("Passwords do not match.");
                 return;
             }
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
             });
+            const data = await response.json()
 
-            const data = await res.json()
-            console.log(data)
-            if (data.detail) { setMessage(data.detail) }
+            if (data.detail) { setError(data.detail) }
             else {
-                setCookie('Email', data.email)
-                setCookie('AuthToken', data.token)
-
-                // Redirect to /goals/:user_id
-                // const userId = data.user_id;
-                navigate(`/`);
-
+                setCookie('Email', data.email, { path: '/' }, { expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
+                setCookie('AuthToken', data.token, { path: '/' })
+                console.log('Cookies:', cookies);
+                console.log("mycookies?:", email, data.token)
+                window.location.href = "/goals/:user_id"
             }
-
+            console.log("data", data)
+            console.log("response:", response)
         } catch (err) {
-            setMessage("An error ocurred. Please try again.");
+            setError("An error ocurred. Please try again.");
             console.error(err);
         }
     };
@@ -87,10 +83,10 @@ const Auth = (props) => {
                     variant="outlined"
                     onChange={(e) => setConfirmPassword(e.target.value)}
                 />}
-                <button type="submit" variant="contained" onClick={(e) => handleAction(e, isLogIn ? "login" : "signup")}>
+                <button type="submit" variant="contained" onClick={(e) => handleSubmit(e, isLogIn ? "login" : "signup")}>
                     Submit</button>
                 <div>
-                    {message && <p>{message}</p>}
+                    {error && <p>{error}</p>}
                 </div>
             </form>
 

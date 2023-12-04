@@ -14,13 +14,11 @@ export const AppContext = createContext(null);
 
 function App() {
   const [token, setToken] = useState(null);
-
   return (
     <AppContext.Provider value={{ token, setToken }}>
       <div className="app">
         <BrowserRouter>
           <Nav />
-
           <Routes>
             <Route path="/" element={<Welcome />} />
             <Route path="/freetime" element={<FreeTime />} />

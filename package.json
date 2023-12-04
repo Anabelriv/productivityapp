@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "build": "if-env TYPE=backend && (cd backend && npm install) || (cd client && npm install)",
-    "backend": "node ./backend/index.js",
+    "backend": "node ./backend/server.js",
     "client": "cd client && npm start"
   },
   "dependencies": {
