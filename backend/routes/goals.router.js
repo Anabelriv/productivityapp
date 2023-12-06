@@ -1,5 +1,4 @@
 const express = require("express");
-//const { logger } = require("../middlewares/utils.js");
 
 const {
     getAllGoals,
@@ -16,13 +15,13 @@ const goal_router = express.Router();
 goal_router.get("/:userEmail", getAllGoals);
 
 
-// body - POST/PUT
-goal_router.post("/", createGoal);
+// CRUD- POST/PUT
+goal_router.post("/:userEmail", createGoal);
 
 // CRUD - Edit a goal - PUT
 goal_router.put("/:goal_id", updateGoal);
 
-// CRUD - Delete a product - DELETE
+// CRUD - Delete a goal - DELETE
 goal_router.delete("/:goal_id", deleteGoal);
 
 module.exports = { goal_router };

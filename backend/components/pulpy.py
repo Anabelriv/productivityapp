@@ -6,11 +6,13 @@ from datetime import datetime, timezone
 
 # reading the json file
 
-with open("data_for_pulpy.json", "r") as file:
-    goalsjson = json.load(file)
-print("jsongoals", goalsjson)
-# converting to CSV
-goals_data = pd.DataFrame(goalsjson)
+# changing to replace the name of the file with a comman line
+# with open(sys.argv[1], "r") as file:
+#     goalsjson = json.load(file)
+# print("jsongoals", goalsjson)
+
+# converting to dataframe
+# goals_data = pd.DataFrame(goalsjson)
 
 # Pulp function
 problem_name = "Goaltester"
@@ -42,6 +44,9 @@ def optimize_goal_selection(goals_data, free_time):
     )
     prob += total_time_required <= free_time
 
+    # Clear the existing objective function
+    prob.objective = None
+
     # Add the objective function to the problem
     objective_function = pulp.lpSum(
         row["days_remaining"] * decision_variables[i]
@@ -70,28 +75,18 @@ def optimize_goal_selection(goals_data, free_time):
     # Print the selected goal as JSON
     print(json.dumps(selected_goal.to_dict(), default=str))
 
-    print("Selected Goal:")
-    print(selected_goal)
-
     # Export the selected goal
     selected_goal.to_csv("selected_goal.csv", index=False)
     print("The selected goal is exported to 'selected_goal.csv'")
 
 
-freeTime = 15
-optimize_goal_selection(goals_data, freeTime)
+if __name__ == "__main__":
+    # Extract parameters from command line arguments
+    goals_json_path = sys.argv[1]
+    freeTime = int(sys.argv[2])
 
-# if __name__ == "__main__":
-#     # Extract parameters from command line arguments
-#     goals = sys.argv[1]
-#     # print("Received JSON file path:", goals_json_path)
-#     userEmail = "undefined"
-#     # userEmail = sys.argv[2]
-#     freeTime = 15
-#     # freeTime = int(sys.argv[3])
+    # read json data directly into a DataFrame
+    goals_data = pd.read_json(goals_json_path)
 
-#     # Load goals from the JSON file
-#     # goals = load_goals_from_file(goals_json_path)
-
-#     # Perform the optimization
-#     optimize_goal_selection(goals, freeTime)
+    # Perform the optimization
+    optimize_goal_selection(goals_data, freeTime)

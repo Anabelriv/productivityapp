@@ -1,14 +1,20 @@
 const { db } = require("../config/db");
 
-const _getAllGoalsDB = async (userEmail) => {
-    try {
-        const todos = await db.select('*').from('goals').where('user_email', '=', userEmail);
-        return todos;
-    } catch (err) {
-        console.error(err);
-        throw err;
-    }
+const _getAllGoalsDB = () => {
+    return db("goals").select("*").where('user_email', '=', userEmail).orderBy('date')
 };
+
+
+
+// const _getAllGoalsDB = async (userEmail) => {
+//     try {
+//         const todos = await db.select('*').from('goals').where('user_email', '=', userEmail);
+//         return todos;
+//     } catch (err) {
+//         console.error(err);
+//         throw err;
+//     }
+// };
 
 const _insertGoalDB = async ({ user_email, title, description, date, id_importance, difficulty }) => {
     if (!user_email || !title || !description || !date || !id_importance || !difficulty) {
