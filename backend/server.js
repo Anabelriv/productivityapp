@@ -1,41 +1,37 @@
-const express = require('express')
-const cors = require('cors')
-const dotenv = require("dotenv").config();
-const path = require("path");
-const cookieParser = require('cookie-parser');
+const PORT = process.env.PORT ?? 8000
 
-//import routes
+const express = require('express') //correct
+const cors = require('cors') //correct
+const cookieParser = require('cookie-parser'); //correct
+const dotenv = require("dotenv").config(); //new
+const path = require("path"); //new
+const { spawn } = require('child_process'); //correct
+const fs = require('fs').promises; //correct
+const { verifyToken } = require("./middlewares/verifyToken.js") // correct
 
+
+
+
+// import routes
 const { user_router } = require("./routes/users.router");
-const { goal_router } = require("./routes/goals.router");
-
-
-
-const { verifyToken } = require("./middlewares/varifyToken.js")
-const { spawn } = require('child_process');
-const fs = require('fs').promises;
-
+const { goal_router } = require("./routes/goals.router.js")
 
 
 const app = express()
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(express.json({ limit: '50mb' }));
-app.use(cors());
-app.use(cookieParser());
+app.use(cors()) // correct
+app.use(express.json());//correct
+app.use(cookieParser()); //correct
+app.use(express.urlencoded({ limit: '50mb', extended: true })); //new
 
-app.listen(process.env.PORT, () => {
-    console.log(`You run on port ${process.env.PORT}`)
-});
 
 //App main routes
-app.use("/api/users", user_router);
-app.use("/api/goals", goal_router);
+app.use("/", user_router);//new
+app.use("/todos", goal_router);
 
 
-
-
-//Free time optimization
+// //Free time optimization
 const { spawnSync } = require('child_process');
+
 
 app.post('/free-time/:userEmail', async (req, res) => {
     const { userEmail } = req.params;
@@ -116,13 +112,16 @@ app.post('/free-time/:userEmail', async (req, res) => {
         }
     });
 });
+//app listen
+app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
+
 
 
 // Have Node serve the files for our built React app
 // app.use(express.static(path.resolve(__dirname, "./client/build")));
-app.use(express.static(path.join(__dirname, "client/build")));
+// app.use(express.static(path.join(__dirname, "client/build")));
 
-// All other GET requests not handled before will return our React app
-app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
-});
+// // All other GET requests not handled before will return our React app
+// app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+// });

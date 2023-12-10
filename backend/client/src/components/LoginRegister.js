@@ -1,11 +1,11 @@
 //new things
 import { AppContext } from "../App";
+import Link from '@mui/material/Link';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Typography from '@mui/material/Typography';
 //old version
 import { useState, useContext, useEffect } from "react";
-// import { useCookies } from 'react-cookie';
 import { TextField } from "@mui/material";
 
 function Copyright(props) {
@@ -24,16 +24,13 @@ function Copyright(props) {
 
 //old version
 const LoginRegister = (props) => {
-    // const [cookies, setCookie] = useCookies(['Email']);
-    // console.log('Email from cookies:', cookies.Email);
     const [isLogIn, setIsLogIn] = useState(true)
-    const [email, setEmail] = useState(null);
+    const [user_email, setUserEmail] = useState(null);
     const [password, setPassword] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState(null);
 
     const [error, setError] = useState(null);
-    const { setToken } = useContext(AppContext);
-
+    const { setToken, setCookies } = useContext(AppContext);
     const navigate = useNavigate()
 
     const viewLogin = (status) => {
@@ -48,40 +45,27 @@ const LoginRegister = (props) => {
                 setError("Passwords do not match.");
                 return;
             }
-            const res = axios.post(`api/users/${endpoint}`, {
-                email,
+            const res = await axios.post(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
+                user_email,
                 password,
             })
-            if (res.status === 200) {
-                setMessage("");
-                setToken(res.data);
-                setLoader(false)
-                navigate("/goals");
-            }
-            // const response = await fetch(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ email, password })
-            // });
-            // const data = await response.json()
+            console.log(res)
+            if (res.status >= 200 && res.status < 300) {
+                setError("");
+                setToken(res.data.token);
 
-            // if (data.detail) { setError(data.detail) }
-            // else {
-            //     setCookie('Email', data.email, { path: '/' }, { expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
-            //     setCookie('AuthToken', data.token, { path: '/' })
-            //     console.log('Cookies:', cookies);
-            //     console.log("mycookies?:", email, data.token)
-            //     window.location.href = "/goals/:user_id"
-            // }
-            // console.log("data", data)
-            // console.log("response:", response)
+                const userEmail = res.data.user_email;
+                setCookies(res.data.token, res.data.userEmail);
+                console.log(userEmail);
+                navigate(`/goals/${userEmail}`);//not working why?!!! 
+            }
         } catch (err) {
             setError(err.response.data.msg);
             console.error(err);
         }
     };
     return (
-        <>
+        <div style={{ background: 'linear-gradient(90deg, #485563 10%, #274c77 90%)' }}>
             <div className="create-goal">
                 <button type="submit" variant="contained"
                     onClick={() => viewLogin(false)}
@@ -101,7 +85,7 @@ const LoginRegister = (props) => {
                         type="email"
                         label="Enter Email"
                         variant="outlined"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => setUserEmail(e.target.value)}
                     />
                     <TextField
                         sx={{ m: 1 }}
@@ -128,7 +112,7 @@ const LoginRegister = (props) => {
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </div>
 
-        </>
+        </div>
     );
 };
 

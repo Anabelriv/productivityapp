@@ -129,6 +129,39 @@ button {
     color: rgb(255, 255, 255);
 }
 
+.getStarted {
+    background-color: #ee6c4d;
+    color: #fff;
+    padding: 20px 25px;
+    font-size: 1.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Bree Serif';
+    font-weight: 300;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    border: none;
+    margin-top: 25px;
+    text-decoration: none;
+}
+
+.start {
+    background-color: #ee6c4d;
+    color: #fff;
+    padding: 20px 25px;
+    font-size: 1.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Bree Serif';
+    font-weight: 300;
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    border: none;
+    text-decoration: none;
+}
+
 /* .logout {
     border: 1.5px solid rgb(255, 175, 163);
     background-color: rgb(255, 175, 163) !important;

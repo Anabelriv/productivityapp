@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import axios from "axios";
 import Goals from "./components/Goals";
 import GoalActions from "./components/Goal";
@@ -17,7 +17,6 @@ export const AppContext = createContext(null);
 
 function App() {
   const [token, setToken] = useState(null);
-  const [uploaded, setUploaded] = useState(null)
   const [userInfo, setUserInfo] = useState({
     id: null,
     user_email: ''
@@ -25,43 +24,52 @@ function App() {
 
   useEffect(() => {
     fetchUserInfo()
-  }, [token, uploaded])
+  }, [token])
 
   const fetchUserInfo = async () => {
     try {
-      const response = await axios.get("/api/users");
-      const data = response.data
+      const response = await axios.get("/user-info");
+      const data = response.data;
       setUserInfo({
         id: data[0].id,
-        user_email: data[0].user_email
-      })
+        user_email: data[0].user_email,
+      });
     } catch (err) {
       console.log(err)
     }
   }
 
+  const setCookies = (token, userEmail) => {
+    document.cookie = `token=${token}; path=/; max-age=3600`; // Set the expiration time accordingly
+    document.cookie = `userEmail=${userEmail}; path=/; max-age=3600`; // Set the expiration time accordingly
+  };
+
 
 
   return (
-    <AppContext.Provider value={{ token, setToken, userInfo, setUserInfo, uploaded, setUploaded }}>
-      <div className="app">
-        {token && <Auth><Nav /></Auth>}
-        <Routes>
-          {token ? (
-            <>
-              <Route path="/freetime" element={<Auth><FreeTime /></Auth>} />
-              <Route path="/goals/:userEmail" element={<Auth><Goals /></Auth>} />
-              <Route path="/goal/:id" element={<Auth><GoalActions /></Auth>} />
-            </>
-          ) : (
-            <>
-              <Route path="*" element={<Navigate to="/login" />} />
-              <Route path="/" element={<Welcome />} />
-              <Route path="/login" element={<LoginRegister title="Login" />} />
-            </>
-          )}
-        </Routes>
-      </div>
+    <AppContext.Provider value={{ token, setToken, userInfo, setUserInfo, setCookies }}>
+      <Router>
+        <div className="app" style={{ background: 'linear-gradient(90deg, #485563 10%, #274c77 90%)' }}>
+          {token && <Auth><Nav /></Auth>}
+          <Routes>
+            {token ? (
+              <>
+                <Route path="/freetime" element={<Auth><FreeTime /></Auth>} />
+                <Route path="/goals/:userEmail" element={<Auth><Goals /></Auth>} />
+                <Route path="/goal/:id" element={<Auth><GoalActions /></Auth>} />
+              </>
+            ) : (
+              <>
+                <Route path="*" element={<Navigate to="/" />} />
+                <Route path="/" element={<Welcome />} />
+                <Route path="/login" element={<LoginRegister title="Login" />} />
+                <Route path="/signup" element={<LoginRegister title="Login" />} />
+
+              </>
+            )}
+          </Routes>
+        </div>
+      </Router>
     </AppContext.Provider>
   );
 }
