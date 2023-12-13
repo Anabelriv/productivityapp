@@ -1,6 +1,7 @@
 const PORT = process.env.PORT ?? 8000
 
 const express = require('express') //correct
+const app = express()
 const cors = require('cors') //correct
 const cookieParser = require('cookie-parser'); //correct
 const dotenv = require("dotenv").config(); //new
@@ -16,9 +17,7 @@ const { verifyToken } = require("./middlewares/verifyToken.js") // correct
 const { user_router } = require("./routes/users.router");
 const { goal_router } = require("./routes/goals.router.js")
 
-
-const app = express()
-app.use(cors()) // correct
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' })) // correct
 app.use(express.json());//correct
 app.use(cookieParser()); //correct
 app.use(express.urlencoded({ limit: '50mb', extended: true })); //new

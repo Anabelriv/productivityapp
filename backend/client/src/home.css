@@ -7,6 +7,54 @@
 }
 
 /* Welcome message*/
+.getStarted {
+    display: flex;
+    background-color: #ee6c4d;
+    color: #fff;
+    padding: 20px 100px;
+    font-size: 1.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: 'Bree Serif';
+    font-weight: 300;
+    position: fixed;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    text-decoration: none;
+    z-index: 1000;
+    /* Adjust the z-index as needed */
+}
+
+/* Optional: Adjust the styles for smaller screens */
+@media screen and (max-width: 375px) {
+    .getStarted {
+        font-size: 1.2rem;
+        padding: 15px 20px;
+    }
+
+    .giga {
+        font-size: 1.2rem !important;
+    }
+
+    .delta {
+        font-size: 1.2rem !important;
+    }
+
+    .wrapper {
+        top: 50% !important;
+    }
+
+    .blockquote h1 {
+        font-size: 1.2rem !important;
+    }
+
+    .blockquote h1 span {
+        font-size: 1.2rem !important;
+    }
+}
+
 
 .giga {
     font-size: 4rem;
@@ -84,19 +132,25 @@ section .welcome {
 
 .wrapper {
     max-width: 100%;
-    margin: 0 auto;
+    margin: 20px auto;
     position: relative;
     z-index: 10;
     transform: translateY(-50%);
-    top: 60%;
+    top: 90%;
+    padding-bottom: 28px;
     text-align: center;
 }
 
-@media screen and (min-width: 1440px) {
+@media screen and (max-width: 767px) {
     section .welcome {
-        height: 400px
+        height: auto;
+    }
+
+    .wrapper {
+        top: 30%;
     }
 }
+
 
 /* Quotes*/
 /* center the blockquote in the page */
@@ -121,7 +175,7 @@ section .welcome {
     position: relative;
     /* for pseudos */
     color: #ee6c4d !important;
-    font-size: 2.8rem !important;
+    font-size: 2.8rem;
     font-weight: normal;
     line-height: 1;
     margin: 0;
@@ -132,7 +186,7 @@ section .welcome {
 }
 
 .blockquote h1 span {
-    font-size: 2.8rem !important;
+    font-size: 2.8rem;
 }
 
 /* Blockquote right double quotes */
@@ -505,4 +559,12 @@ button:active,
 .container.full .step-one .liner,
 .container.full .step-two .liner {
     width: 100%;
+}
+
+@media screen and (max-width: 767px) {
+    .container {
+        width: 100%;
+        padding: 5%;
+        top: 10%;
+    }
 }

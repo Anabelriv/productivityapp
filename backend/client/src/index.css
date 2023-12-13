@@ -129,27 +129,12 @@ button {
     color: rgb(255, 255, 255);
 }
 
-.getStarted {
-    background-color: #ee6c4d;
-    color: #fff;
-    padding: 20px 25px;
-    font-size: 1.5rem;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: 'Bree Serif';
-    font-weight: 300;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    border: none;
-    margin-top: 25px;
-    text-decoration: none;
-}
+
 
 .start {
     background-color: #ee6c4d;
     color: #fff;
-    padding: 20px 25px;
+    padding: 20px 100px;
     font-size: 1.5rem;
     border-radius: 3px;
     cursor: pointer;

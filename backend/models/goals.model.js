@@ -2,7 +2,10 @@ const { db } = require("../config/db");
 
 const _getAllGoalsDB = async (userEmail) => {
     try {
-        const todos = await db.select('*').from('goals').where('user_email', '=', userEmail).orderBy('date');
+        const todos = await db.select('*')
+            .from('goals')
+            .where('user_email', '=', userEmail)
+            .orderBy('date', 'asc');
         return todos;
     } catch (err) {
         console.error(err);

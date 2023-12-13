@@ -69,10 +69,12 @@ function Welcome() {
 
         <div style={{ background: 'linear-gradient(90deg, #485563 10%, #274c77 90%)' }}>
             <div>
+                <a href="/login" className="getStarted">Get Started!</a>
+            </div>
+            <div>
+
                 <section className='welcome' style={{ height: '285px' }}>
-                    <div>
-                        <a href="/login" className="getStarted">LogIn</a>
-                    </div>
+
                     <div className="wrapper">
                         <h1 className="giga bree-serif regular double-header-line">Time is what we want most <br></br>and what we use worst</h1>
                         <p className="delta oswald regular uppercase ls-large">William Penn</p>
@@ -116,7 +118,7 @@ function Welcome() {
                     </div>
                 </div>
             </div>
-            <div><a className="start" href="/signup">Let's write your goals</a></div>
+            {/* <div style={{ textAlign: 'center', marginBottom: '20px' }}><a className="start" href="/signup">Let's write your goals</a></div> */}
         </div>
     );
 

@@ -53,8 +53,9 @@ const LoginRegister = (props) => {
             if (res.status >= 200 && res.status < 300) {
                 setError("");
                 setToken(res.data.token);
-
                 const userEmail = res.data.user_email;
+
+                setUserEmail(res.data.user_email);
                 setCookies(res.data.token, res.data.userEmail);
                 console.log(userEmail);
                 navigate(`/goals/${userEmail}`);//not working why?!!! 

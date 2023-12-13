@@ -13,6 +13,7 @@ import "./home.css";
 
 
 
+
 export const AppContext = createContext(null);
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
     try {
       const response = await axios.get("/user-info");
       const data = response.data;
+      console.log("fetchui", data)
       setUserInfo({
         id: data[0].id,
         user_email: data[0].user_email,
@@ -40,11 +42,9 @@ function App() {
   }
 
   const setCookies = (token, userEmail) => {
-    document.cookie = `token=${token}; path=/; max-age=3600`; // Set the expiration time accordingly
-    document.cookie = `userEmail=${userEmail}; path=/; max-age=3600`; // Set the expiration time accordingly
+    document.cookie = `token=${token}; path=/; max-age=3600`;
+    document.cookie = `userEmail=${userEmail}; path=/; max-age=3600`;
   };
-
-
 
   return (
     <AppContext.Provider value={{ token, setToken, userInfo, setUserInfo, setCookies }}>
@@ -56,7 +56,7 @@ function App() {
               <>
                 <Route path="/freetime" element={<Auth><FreeTime /></Auth>} />
                 <Route path="/goals/:userEmail" element={<Auth><Goals /></Auth>} />
-                <Route path="/goal/:id" element={<Auth><GoalActions /></Auth>} />
+                <Route path="/goals/:userEmail" element={<Auth><GoalActions /></Auth>} />
               </>
             ) : (
               <>

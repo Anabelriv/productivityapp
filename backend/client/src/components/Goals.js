@@ -3,23 +3,34 @@ import ListItem from "./ListItem"
 import LoginRegister from "./LoginRegister";
 import { useState, useEffect, useContext } from "react";
 import { useCookies } from "react-cookie";
-import { AppContext } from "../App";
+import { Auth } from "../auth/Auth";
+
+
 
 const Goals = () => {
-    // const [cookies] = useCookies(null)
-    //const authToken = cookies.AuthToken
-    const user_email = "blue@test.com"
-    //console.log("useremailcookies: ", user_email, "auth:", authToken)
-    const { userInfo } = useContext(AppContext);
+    const [cookies] = useCookies(null)
+    const authToken = cookies.token
+    const userEmail = cookies.userEmail
+    console.log("useremailcookies: ", userEmail, "auth:", authToken)
+
     const [goals, setGoals] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const getData = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${user_email}`)
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${userEmail}`)
+            console.log(response)
+            if (!response.ok) {
+                throw new Error(`Failed to fetch data: ${response.statusText}`);
+            }
             const json = await response.json()
             setGoals(json)
         } catch (err) {
-            console.error(err)
+            console.error(err);
+            setError('Failed to fetch goals. Please try again')
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -29,18 +40,18 @@ const Goals = () => {
         []
     )
 
-    //Sort by date
-    // const sortedGoals = goals?.sort((a, b) => new Date(a.date) - new Date(b.date))
-
     return (
         < div className="goals-list">
-            {!authToken && <Auth />}
-            {authToken &&
-                <>
-                    <ListHeader getData={getData} />
-                    <p>Welcome {user_email}!</p>
-                    {goals.map((goal) => <ListItem key={goal.goal_id} goal={goal} getData={getData} />)}
-                </>}
+            {/* {!authToken && <Auth />}
+            {authToken && ( */}
+            <>
+                <ListHeader getData={getData} />
+                <p>Welcome {userEmail}!</p>
+                {loading && <p>Loading goals...</p>}
+                {error && <p>{error}</p>}
+                {!loading && !error && goals.map((goal) => <ListItem key={goal.goal_id} goal={goal} getData={getData} />)}
+            </>
+            {/* )} */}
         </div >
 
     );

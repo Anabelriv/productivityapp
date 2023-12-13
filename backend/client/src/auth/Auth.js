@@ -12,21 +12,16 @@ export const Auth = (props) => {
     useEffect(() => {
         const verify = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_SERVERURL}/verify`, {
-                    data: {
-                        "token": token?.token,
-                    },
-                });
-                //if pass then store the token and user_email
+                const res = await axios.get(`${process.env.REACT_APP_SERVERURL}/verify`, { withCredentials: true });
+                // If the request is successful, the cookie should be automatically stored by the browser
+
                 if (res.status === 200) {
-                    localStorage.setItem("token", token?.token);
-                    localStorage.setItem("user_email", res.data.user_email);
                     setRedirect(true);
                 }
+                console.log(res)
             } catch (err) {
-                // Clear token and user_email from localStorage on error
-                localStorage.removeItem("token");
-                localStorage.removeItem("user_email");
+                // Clear token
+                console.error(err)
                 setToken(null);
                 navigate("/login");
             }

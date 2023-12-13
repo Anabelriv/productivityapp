@@ -7,9 +7,8 @@ const {
 
 // Get all goals
 const getAllGoals = async (req, res) => {
-    //const userEmail = "blue@test.com";
-
     const { userEmail } = req.params;
+    console.log("user_email from server", userEmail)
     try {
         const goals = await _getAllGoalsDB(userEmail);
         res.json(goals);
@@ -21,7 +20,10 @@ const getAllGoals = async (req, res) => {
 
 // Create goal
 const createGoal = async (req, res) => {
-    const { user_email, title, description, date, id_importance, difficulty } = req.body;
+    const { user_email } = req.params
+    console.log("user_email from server to create goal", user_email)
+    const { title, description, date, id_importance, difficulty } = req.body;
+
     // Validate request body
     if (!user_email || !title || !description || !date || !id_importance || !difficulty) {
         return res.status(400).json({ error: 'Incomplete data in the request body' });
@@ -37,9 +39,8 @@ const createGoal = async (req, res) => {
 
 // Update goal
 const updateGoal = async (req, res) => {
-    //const goal_id = "29"
-    const { goal_id } = req.params;
-    const { user_email, title, description, date, id_importance, difficulty } = req.body;
+    const { goal_id, user_email } = req.params;
+    const { title, description, date, id_importance, difficulty } = req.body;
 
     try {
         const updatedGoal = await _editGoalDB(
@@ -63,7 +64,6 @@ const updateGoal = async (req, res) => {
 
 // Delete goal
 const deleteGoal = async (req, res) => {
-    //const goal_id = "30"
     const { goal_id } = req.params;
     try {
         const data = await _deleteGoalDB(goal_id);

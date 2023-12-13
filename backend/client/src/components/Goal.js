@@ -7,9 +7,10 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     const [cookies] = useCookies(null)
     console.log("getmecookies", cookies)
     const editMode = mode === 'edit' ? true : false;
+    const { user_email } = useParams();
 
     const [data, setData] = useState({
-        user_email: editMode ? goal.user_email : 'blue@test.com',
+        user_email: editMode ? goal.user_email : cookies.user_email,
         title: editMode ? goal.title : '',
         description: editMode ? goal.description : '',
         date: editMode ? goal.date : '',
@@ -26,7 +27,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
             const formattedDate = new Date(data.date).toISOString().split('T')[0];
 
             const postData = {
-                user_email: "blue@test.com",
+                user_email: cookies.user_email,
                 title: data.title,
                 description: data.description,
                 date: formattedDate,
@@ -64,7 +65,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     //get goal details
     const getGoalInfo = async () => {
         try {
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${param.id}`);
+            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${user_email}`);
             console.log("Response:", res);
             if (res.ok) {
                 const fetchedData = await res.json();
@@ -108,7 +109,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     useEffect(() => {
         getGoalInfo();
         // eslint-disable-next-line 
-    }, [param.id]);
+    }, []);
 
     //delete a goal
 
@@ -130,7 +131,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     return (
         <div className="result">
             <div className="create-goal">
-                <h1 className="goal-title">{data?.title} {param.id}</h1>
+                <h1 className="goal-title">{data?.title}</h1>
                 <span></span>
                 <div className="button-container">
                     <div className="form-title-container">
