@@ -14,6 +14,7 @@ import "./home.css";
 
 
 
+
 export const AppContext = createContext(null);
 
 function App() {
@@ -42,8 +43,8 @@ function App() {
   }
 
   const setCookies = (token, userEmail) => {
-    document.cookie = `token=${token}; path=/; max-age=3600`;
-    document.cookie = `userEmail=${userEmail}; path=/; max-age=3600`;
+    document.cookie = `token=${token}; path=/; max-age=36000`;
+    document.cookie = `userEmail=${userEmail}; path=/; max-age=36000`;
   };
 
   return (
@@ -56,7 +57,7 @@ function App() {
               <>
                 <Route path="/freetime" element={<Auth><FreeTime /></Auth>} />
                 <Route path="/goals/:userEmail" element={<Auth><Goals /></Auth>} />
-                <Route path="/goals/:userEmail" element={<Auth><GoalActions /></Auth>} />
+                <Route path="/newGoal/:userEmail" element={<Auth><GoalActions /></Auth>} />
               </>
             ) : (
               <>

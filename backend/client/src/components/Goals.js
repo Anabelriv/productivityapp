@@ -19,7 +19,7 @@ const Goals = () => {
 
     const getData = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${userEmail}`)
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${cookies.userEmail}`)
             console.log(response)
             if (!response.ok) {
                 throw new Error(`Failed to fetch data: ${response.statusText}`);
@@ -42,16 +42,17 @@ const Goals = () => {
 
     return (
         < div className="goals-list">
-            {/* {!authToken && <Auth />}
-            {authToken && ( */}
-            <>
-                <ListHeader getData={getData} />
-                <p>Welcome {userEmail}!</p>
-                {loading && <p>Loading goals...</p>}
-                {error && <p>{error}</p>}
-                {!loading && !error && goals.map((goal) => <ListItem key={goal.goal_id} goal={goal} getData={getData} />)}
-            </>
-            {/* )} */}
+            {!authToken && <Auth />}
+            {authToken && (
+                <>
+                    <ListHeader getData={getData} />
+                    <p>Welcome {userEmail}!</p>
+                    {loading && <p>Loading goals...</p>}
+                    {error && <p>{error}</p>}
+                    {!loading && !error && goals.map((goal) => <ListItem key={goal.goal_id} goal={goal} getData={getData} />)}
+                </>
+            )}
+            )
         </div >
 
     );

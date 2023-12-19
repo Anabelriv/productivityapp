@@ -7,17 +7,18 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     const [cookies] = useCookies(null)
     console.log("getmecookies", cookies)
     const editMode = mode === 'edit' ? true : false;
-    const { user_email } = useParams();
+    // const { userEmail } = useParams();
+
 
     const [data, setData] = useState({
-        user_email: editMode ? goal.user_email : cookies.user_email,
+        user_email: editMode ? goal.user_email : cookies.userEmail,
         title: editMode ? goal.title : '',
         description: editMode ? goal.description : '',
         date: editMode ? goal.date : '',
         id_importance: editMode ? goal.id_importance : '',
         difficulty: editMode ? goal.difficulty : ''
     });
-    const param = useParams();
+    const param = cookies.userEmail;
     console.log("param=>", param);
 
     //post data
@@ -27,7 +28,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
             const formattedDate = new Date(data.date).toISOString().split('T')[0];
 
             const postData = {
-                user_email: cookies.user_email,
+                user_email: cookies.userEmail,
                 title: data.title,
                 description: data.description,
                 date: formattedDate,
@@ -35,7 +36,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
                 difficulty: data.difficulty
             };
 
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos`, {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/newGoal/${cookies.userEmail}`, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(postData)
@@ -44,8 +45,10 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
                 console.log('worked')
                 setShowModal(false)
                 getData()
-                console.log(data)
             }
+            console.log(`${process.env.REACT_APP_SERVERURL}/todos/${cookies.userEmail}`);
+            console.log(postData)
+
         } catch (err) {
             console.error(err)
         }
@@ -65,7 +68,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     //get goal details
     const getGoalInfo = async () => {
         try {
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${user_email}`);
+            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${cookies.userEmail}`);
             console.log("Response:", res);
             if (res.ok) {
                 const fetchedData = await res.json();
@@ -87,7 +90,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     const update = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${goal.goal_id}`, {
+            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/updateGoal/${goal.goal_id}`, {
                 method: "PUT",
                 headers: {
                     "Content-type": "application/json",

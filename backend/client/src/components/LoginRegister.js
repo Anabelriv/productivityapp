@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 //old version
 import { useState, useContext, useEffect } from "react";
 import { TextField } from "@mui/material";
+import { cookies, useCookies } from "react-cookie";
 
 function Copyright(props) {
     return (
@@ -31,8 +32,9 @@ const LoginRegister = (props) => {
 
     const [error, setError] = useState(null);
     const { setToken, setCookies } = useContext(AppContext);
+    const [cookies, setCookie, removeCookie] = useCookies(null) //new
     const navigate = useNavigate()
-
+    console.log("reactcookies", cookies) //new
     const viewLogin = (status) => {
         setError(null)
         setIsLogIn(status)
@@ -56,9 +58,11 @@ const LoginRegister = (props) => {
                 const userEmail = res.data.user_email;
 
                 setUserEmail(res.data.user_email);
-                setCookies(res.data.token, res.data.userEmail);
+                setCookies(res.data.token, res.data.userEmail); //changed to setCookie instead of setCookies
+                setCookie(res.data.token, res.data.userEmail); //from tutorial
+
                 console.log(userEmail);
-                navigate(`/goals/${userEmail}`);//not working why?!!! 
+                navigate(`/goals/${cookies.userEmail}`);//not working why?!!! 
             }
         } catch (err) {
             setError(err.response.data.msg);

@@ -14,10 +14,10 @@ const goal_router = express.Router();
 goal_router.get("/:userEmail", getAllGoals);
 
 // CRUD - POST/PUT
-goal_router.post("/:userEmail", createGoal);
+goal_router.post("/newGoal/:userEmail", createGoal);
 
 // CRUD - Edit a goal - PUT
-goal_router.put("/:userEmail/:goal_id", updateGoal);
+goal_router.put("/updateGoal/:goal_id", updateGoal);
 
 // CRUD - Delete a goal - DELETE
 goal_router.delete("/:goal_id", deleteGoal);

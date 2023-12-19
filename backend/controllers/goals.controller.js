@@ -20,9 +20,9 @@ const getAllGoals = async (req, res) => {
 
 // Create goal
 const createGoal = async (req, res) => {
-    const { user_email } = req.params
-    console.log("user_email from server to create goal", user_email)
-    const { title, description, date, id_importance, difficulty } = req.body;
+    // const { userEmail } = req.params
+    // console.log("user_email from server to create goal", userEmail)
+    const { user_email, title, description, date, id_importance, difficulty } = req.body;
 
     // Validate request body
     if (!user_email || !title || !description || !date || !id_importance || !difficulty) {
@@ -39,13 +39,12 @@ const createGoal = async (req, res) => {
 
 // Update goal
 const updateGoal = async (req, res) => {
-    const { goal_id, user_email } = req.params;
+    const { goal_id } = req.params;
     const { title, description, date, id_importance, difficulty } = req.body;
 
     try {
         const updatedGoal = await _editGoalDB(
             {
-                user_email,
                 title,
                 description,
                 date,
