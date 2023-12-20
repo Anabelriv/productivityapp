@@ -24,7 +24,7 @@ function FreeTime() {
         setSelectedTime(time);
 
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/free-time/${cookies.userEmail}`, {
+            const response = await fetch(`/free-time/${cookies.userEmail}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

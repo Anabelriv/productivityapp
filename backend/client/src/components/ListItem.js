@@ -8,7 +8,7 @@ function ListItem({ goal, getData }) {
 
     const del = async () => {
         try {
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${goal.goal_id}`, {
+            const res = await fetch(`/todos/${goal.goal_id}`, {
                 method: "DELETE",
             });
             if (res.status === 200) {

@@ -36,7 +36,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
                 difficulty: data.difficulty
             };
 
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/newGoal/${cookies.userEmail}`, {
+            const response = await fetch(`/todos/newGoal/${cookies.userEmail}`, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(postData)
@@ -46,7 +46,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
                 setShowModal(false)
                 getData()
             }
-            console.log(`${process.env.REACT_APP_SERVERURL}/todos/${cookies.userEmail}`);
+            console.log(`/todos/${cookies.userEmail}`);
             console.log(postData)
 
         } catch (err) {
@@ -68,7 +68,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     //get goal details
     const getGoalInfo = async () => {
         try {
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${cookies.userEmail}`);
+            const res = await fetch(`/todos/${cookies.userEmail}`);
             console.log("Response:", res);
             if (res.ok) {
                 const fetchedData = await res.json();
@@ -90,7 +90,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     const update = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/updateGoal/${goal.goal_id}`, {
+            const res = await fetch(`/todos/updateGoal/${goal.goal_id}`, {
                 method: "PUT",
                 headers: {
                     "Content-type": "application/json",
@@ -119,7 +119,7 @@ const GoalActions = ({ mode, setShowModal, getData, goal }) => {
     const del = async () => {
         try {
             console.log('Delete button clicked');
-            const res = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${goal.goal_id}`, {
+            const res = await fetch(`/todos/${goal.goal_id}`, {
                 method: "DELETE",
             });
             if (res.status === 200) {

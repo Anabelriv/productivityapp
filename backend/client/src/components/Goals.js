@@ -19,7 +19,7 @@ const Goals = () => {
 
     const getData = async () => {
         try {
-            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/todos/${cookies.userEmail}`)
+            const response = await fetch(`/todos/${cookies.userEmail}`)
             console.log(response)
             if (!response.ok) {
                 throw new Error(`Failed to fetch data: ${response.statusText}`);
