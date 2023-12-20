@@ -17,6 +17,13 @@ const { verifyToken } = require("./middlewares/verifyToken.js")
 const { user_router } = require("./routes/users.router");
 const { goal_router } = require("./routes/goals.router.js")
 
+//cors app use
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 app.use(cors({ origin: ['http://localhost:3000', 'https://productivity-app-bg2o.onrender.com'], credentials: true }));
 app.use(express.json());
