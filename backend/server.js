@@ -113,7 +113,8 @@ app.post('/free-time/:userEmail', async (req, res) => {
 
 
 
-
+//app listen
+app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
 
 // Have Node serve the files for our built React app
 app.use(express.static(path.resolve(__dirname, "./client/build")));
@@ -124,5 +125,4 @@ app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
 });
 
-//app listen
-app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
+
