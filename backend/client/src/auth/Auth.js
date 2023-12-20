@@ -12,7 +12,7 @@ export const Auth = (props) => {
     useEffect(() => {
         const verify = async () => {
             try {
-                const res = await axios.get(`${process.env.REACT_APP_SERVERURL}/verify`, { withCredentials: true });
+                const res = await axios.get(`${process.env.REACT_APP_SERVERURL}/verify`);
                 // If the request is successful, the cookie should be automatically stored by the browser
 
                 if (res.status === 200) {
