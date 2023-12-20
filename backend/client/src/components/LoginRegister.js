@@ -62,7 +62,7 @@ const LoginRegister = (props) => {
                 setCookie(res.data.token, res.data.userEmail); //from tutorial
 
                 console.log(userEmail);
-                navigate(`/goals/${cookies.userEmail}`);//not working why?!!! 
+                navigate(`/goals/${cookies.userEmail}`);
             }
         } catch (err) {
             setError(err.response.data.msg);
