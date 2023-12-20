@@ -39,6 +39,11 @@ app.post('/free-time/:userEmail', async (req, res) => {
     const { freeTime } = req.body;
     console.log(freeTime)
 
+    //cors handler
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
+
     // Fetch user's goals from the database based on userEmail
     const goals = await _getAllGoalsDB(userEmail)
     console.log('goals', goals)

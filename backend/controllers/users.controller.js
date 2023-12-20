@@ -5,6 +5,9 @@ const dotenv = require("dotenv").config();
 
 const findUser = async (req, res) => {
     console.log("user in controller ======>", req.user.user_email)
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     try {
         const data = await _getUser(req.user.user_email)
         res.json(data)
@@ -15,6 +18,9 @@ const findUser = async (req, res) => {
 }
 const login = async (req, res) => {
     const { user_email, password } = req.body;
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     try {
         const user = await _login(user_email, password);
         console.log('User:', user);
@@ -38,6 +44,9 @@ const login = async (req, res) => {
 
 
 const register = async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     const {
         user_email,
         password

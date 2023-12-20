@@ -9,6 +9,9 @@ const {
 const getAllGoals = async (req, res) => {
     const { userEmail } = req.params;
     console.log("user_email from server", userEmail)
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     try {
         const goals = await _getAllGoalsDB(userEmail);
         res.json(goals);
@@ -20,6 +23,9 @@ const getAllGoals = async (req, res) => {
 
 // Create goal
 const createGoal = async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     // const { userEmail } = req.params
     // console.log("user_email from server to create goal", userEmail)
     const { user_email, title, description, date, id_importance, difficulty } = req.body;
@@ -39,6 +45,9 @@ const createGoal = async (req, res) => {
 
 // Update goal
 const updateGoal = async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     const { goal_id } = req.params;
     const { title, description, date, id_importance, difficulty } = req.body;
 
@@ -63,6 +72,9 @@ const updateGoal = async (req, res) => {
 
 // Delete goal
 const deleteGoal = async (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+
     const { goal_id } = req.params;
     try {
         const data = await _deleteGoalDB(goal_id);
