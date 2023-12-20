@@ -17,7 +17,15 @@ const { verifyToken } = require("./middlewares/verifyToken.js")
 const { user_router } = require("./routes/users.router");
 const { goal_router } = require("./routes/goals.router.js")
 
-app.use(cors({ credentials: true, origin: '*' }))
+//cors
+const corsOptions = {
+    credentials: true,
+    origin: [
+        'http://localhost:3000',     // Your local development origin
+        'https://productivity-app-bg2o.onrender.com'  // Render-deployed frontend URL
+    ],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
