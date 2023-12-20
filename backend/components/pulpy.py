@@ -76,8 +76,14 @@ def optimize_goal_selection(goals_data, free_time):
     print(json.dumps(selected_goal.to_dict(), default=str))
 
     # Export the selected goal
-    selected_goal.to_csv("selected_goal.csv", index=False)
-    print("The selected goal is exported to 'selected_goal.csv'")
+    # selected_goal.to_csv("selected_goal.csv", index=False)
+
+    # Export the selected goal as a JSON file
+    with open("selected_goal.json", "w") as json_file:
+        json.dump(selected_goal.to_dict(), json_file, default=str)
+
+
+print("The selected goal is exported to 'selected_goal.json'")
 
 
 if __name__ == "__main__":

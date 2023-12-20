@@ -8,7 +8,7 @@ function FreeTime() {
     const [selectedGoal, setSelectedGoal] = useState(null);
     const [selectedTime, setSelectedTime] = useState('');
     const [cookies] = useCookies(['Email', 'AuthToken']);
-    const userEmail = cookies['Email']
+    const userEmail = cookies.userEmail
     function togglePop() {
         setSeen(!seen);
     }
@@ -22,19 +22,25 @@ function FreeTime() {
         }
         // Set the selected time in the state
         setSelectedTime(time);
-        const response = await fetch(`${process.env.REACT_APP_SERVERURL}/free-time/${userEmail}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ freeTime: selectedTime }),
-        });
-        console.log('Selected Time:', selectedTime);
-        const result = await response.json();
-        setSelectedGoal(result); // Set the selected goal
-        togglePop(); // Show the Result component
 
-        console.log('Selected Goal:', selectedGoal);
+        try {
+            const response = await fetch(`${process.env.REACT_APP_SERVERURL}/free-time/${cookies.userEmail}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ freeTime: selectedTime }),
+            });
+            console.log('Selected Time:', selectedTime);
+            const result = await response.json();
+            setSelectedGoal(result); // Set the selected goal
+            togglePop(); // Show the Result component
+
+            console.log('Selected Goal:', selectedGoal);
+        } catch (error) {
+            console.error("error fetching and setting selected goal:", error)
+        }
+
     };
 
     // Call handleOptimizeFreeTime with the selected time when the button is clicked

@@ -1,14 +1,14 @@
 const PORT = process.env.PORT ?? 8000
 
-const express = require('express') //correct
+const express = require('express')
 const app = express()
-const cors = require('cors') //correct
-const cookieParser = require('cookie-parser'); //correct
-const dotenv = require("dotenv").config(); //new
-const path = require("path"); //new
-const { spawn } = require('child_process'); //correct
-const fs = require('fs').promises; //correct
-const { verifyToken } = require("./middlewares/verifyToken.js") // correct
+const cors = require('cors')
+const cookieParser = require('cookie-parser');
+const dotenv = require("dotenv").config();
+const path = require("path");
+const { spawn } = require('child_process');
+const fs = require('fs').promises;
+const { verifyToken } = require("./middlewares/verifyToken.js")
 
 
 
@@ -17,19 +17,20 @@ const { verifyToken } = require("./middlewares/verifyToken.js") // correct
 const { user_router } = require("./routes/users.router");
 const { goal_router } = require("./routes/goals.router.js")
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' })) // correct
-app.use(express.json());//correct
-app.use(cookieParser()); //correct
-app.use(express.urlencoded({ limit: '50mb', extended: true })); //new
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 
 //App main routes
-app.use("/", user_router);//new
+app.use("/", user_router);
 app.use("/todos", goal_router);
 
 
 // //Free time optimization
 const { spawnSync } = require('child_process');
+const { _getAllGoalsDB } = require("./models/goals.model.js")
 
 
 app.post('/free-time/:userEmail', async (req, res) => {
@@ -38,7 +39,7 @@ app.post('/free-time/:userEmail', async (req, res) => {
     console.log(freeTime)
 
     // Fetch user's goals from the database based on userEmail
-    const goals = await db.select('*').from('goals').where('user_email', '=', userEmail);
+    const goals = await _getAllGoalsDB(userEmail)
     console.log('goals', goals)
     // Convert goals to a JSON string
     const goalsJson = JSON.stringify(goals);
@@ -69,58 +70,59 @@ app.post('/free-time/:userEmail', async (req, res) => {
     let responseSent = false;
 
     // Handle the output of the Python script
+    // new code
+    let responseData = '';
     pythonProcess.stdout.on('data', (data) => {
         console.log('Received data:', data.toString());
+        responseData += data.toString();
+    });
+    // Handle errors
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Error: ${data}`);
+
+        // Send an error response to the client
+        if (!responseSent) {
+            res.status(500).json({ error: 'Internal Server Error' });
+            responseSent = true;
+        }
+    });
+
+    // Handle the end of the Python script execution
+    pythonProcess.on('close', (code) => {
+        console.log(`Python script exited with code ${code}`);
 
         // Extract JSON data from the output
-        const jsonStartIndex = data.indexOf('{');
-        const jsonEndIndex = data.lastIndexOf('}');
-        const jsonSubstring = data.toString().substring(jsonStartIndex, jsonEndIndex + 1);
+        const jsonStartIndex = responseData.indexOf('{');
+        const jsonEndIndex = responseData.lastIndexOf('}');
+        const jsonSubstring = responseData.substring(jsonStartIndex, jsonEndIndex + 1);
 
         try {
             // Parse the extracted JSON output from the Python script
             const selectedGoal = JSON.parse(jsonSubstring);
 
-            // Check if the response has already been sent
-            if (!responseSent) {
-                // Send the response to the client
-                res.json(selectedGoal);
-                responseSent = true; // Set the flag to true to prevent multiple responses
-            }
+            // Send the response to the client
+            res.json(selectedGoal);
         } catch (error) {
             console.error(`Error parsing JSON: ${error.message}`);
 
-            // Check if the response has already been sent
-            if (!responseSent) {
-                // Send an error response to the client
-                res.status(500).json({ error: 'Internal Server Error' });
-                responseSent = true; // Set the flag to true to prevent multiple responses
-            }
-        }
-    });
-
-    // Handle errors
-    pythonProcess.stderr.on('data', (data) => {
-        console.error(`Error: ${data}`);
-
-        // Check if the response has already been sent
-        if (!responseSent) {
             // Send an error response to the client
             res.status(500).json({ error: 'Internal Server Error' });
-            responseSent = true; // Set the flag to true to prevent multiple responses
         }
     });
 });
-//app listen
-app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
+
+
 
 
 
 // Have Node serve the files for our built React app
-// app.use(express.static(path.resolve(__dirname, "./client/build")));
-// app.use(express.static(path.join(__dirname, "client/build")));
+app.use(express.static(path.resolve(__dirname, "./client/build")));
+app.use(express.static(path.join(__dirname, "client/build")));
 
 // // All other GET requests not handled before will return our React app
-// app.get("*", (req, res) => {
-//     res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
-// });
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "./client/build", "index.html"));
+});
+
+//app listen
+app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`))
