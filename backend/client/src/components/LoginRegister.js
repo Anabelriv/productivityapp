@@ -47,7 +47,7 @@ const LoginRegister = (props) => {
                 setError("Passwords do not match.");
                 return;
             }
-            const res = await axios.post(`${process.env.REACT_APP_SERVERURL}/${endpoint}`, {
+            const res = await axios.post(`/${endpoint}`, {
                 user_email,
                 password,
             })
