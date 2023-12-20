@@ -30,7 +30,7 @@ function App() {
 
   const fetchUserInfo = async () => {
     try {
-      const response = await axios.get("/user-info");
+      const response = await axios.get("/user-info", { withCredentials: true });
       const data = response.data;
       console.log("fetchui", data)
       setUserInfo({
